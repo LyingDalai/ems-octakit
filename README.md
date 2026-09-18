@@ -19,6 +19,10 @@ UX changes:
 - Saving a Kit prompts a name (max 7 chars). FUNC+PART+YES (MKI: FUNC+BANK+YES) skips the prompt
 - In the LOAD/SAVE KIT menus, you can copy/paste/clear/undo Kit slots
 - Unassigned Kits are marked with an asterisk
+- LOAD KIT > UNDO KIT loads the last loaded Kit
+- FUNC+PASTE+PART (MKI: FUNC+PASTE+MIDI) when pasting a Pattern will also save its assigned Kit to the next available slot
+- PTN+FUNC+RIGHT will save the current Kit, then copy/paste it to the next available slot, then copy/paste the current Pattern to the next slot over, and then load the new Pattern with the new Kit slot assigned to it
+- PTN+FUNC+TRIG can copy/paste/clear/undo inactive Patterns. Use BANK+TRIG > BANK+FUNC+TRIG to manage Patterns in other Banks as well
 
 # BUG REPORTS
 
