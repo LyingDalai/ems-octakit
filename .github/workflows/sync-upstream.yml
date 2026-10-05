@@ -1,0 +1,30 @@
+name: Sync upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 4 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge upstream default branch
+        run: |
+          git remote add upstream "https://github.com/${{ github.event.repository.parent }}.git"
+          git fetch --no-tags upstream
+          git merge --no-edit "upstream/${{ github.event.repository.default_branch }}"
+
+      - name: Push
+        run: git push origin "HEAD:${{ github.event.repository.default_branch }}"
