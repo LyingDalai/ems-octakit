@@ -16,33 +16,13 @@ jobs:
   sync:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Diagnose fork parent fields
+      - name: Merge upstream
         run: |
-          echo "repository.full_name=${{ github.repository }}"
-          echo "event.repository.full_name=${{ github.event.repository.full_name }}"
-          echo "parent.full_name=[${{ github.event.repository.parent.full_name }}]"
-          echo "parent.id=[${{ github.event.repository.parent.id }}]"
-          echo "source.full_name=[${{ github.event.repository.source.full_name }}]"
-          echo "source.id=[${{ github.event.repository.source.id }}]"
-          echo "parent via API:"
-          curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}" \
-            | python3 -c "import json,sys; d=json.load(sys.stdin); print('  .parent.full_name =', repr(d.get('parent',{}).get('full_name') if d.get('parent') else None)); print('  .source.full_name =', repr(d.get('source',{}).get('full_name') if d.get('source') else None))"
-
-      - name: Merge upstream default branch
-        run: |
-          upstream="${{ github.event.repository.parent.full_name }}"
-          if [ -z "$upstream" ]; then
-            echo "::error::fork parent not found in event context"
-            exit 1
-          fi
-          echo "using upstream=$upstream"
-          git remote add upstream "https://github.com/$upstream.git"
+          git remote add upstream https://github.com/emuyia/ems-octakit.git
           git fetch --no-tags upstream
           git merge --no-edit "upstream/${{ github.event.repository.default_branch }}"
 
